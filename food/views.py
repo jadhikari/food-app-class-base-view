@@ -1,66 +1,49 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from django.http import HttpResponse
-from django.contrib.auth.decorators import login_required
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
 #models loaader
 from .models import Item
 from .forms import ItemForm
 
-# Create your views here.
-@login_required
-def index(request):
-    item_list = Item.objects.all()
+
+class IndexClassView(ListView):
+    model = Item 
+    template_name = 'food/index.html'
+    context_object_name = 'item_list'
+
+class FoodDetail(DetailView):
+    model= Item
+    template_name='food/detail.html'
+
+class ItemCreateView(CreateView):
+    model = Item
+    form_class = ItemForm
+    template_name = 'food/item-form.html'
+    success_url = reverse_lazy('food:index')  # Replace 'food:index' with the actual URL name
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        # You can perform additional actions after the form is successfully validated and saved here
+        return response
+
+class ItemUpdateView(UpdateView):
+    model = Item
+    form_class = ItemForm
+    template_name = 'food/item-form.html'
+    success_url = reverse_lazy('food:index')  # Replace 'food:index' with the actual URL name
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        # You can perform additional actions after the form is successfully validated and saved here
+        return response
     
+class ItemDeleteView(DeleteView):
+    model = Item
+    template_name = 'food/delete-item.html'
+    success_url = reverse_lazy('food:index')  # Replace 'food:index' with the actual URL name
 
-    context={
-            'item_list': item_list ,
-    }
-
-    return render(request, 'food/index.html', context)
-
-
-@login_required
-def detail(request,item_id):
-    item = Item.objects.get(pk=item_id)
-    context={
-            'item': item ,
-    }
-    return render(request, 'food/detail.html', context)
-@login_required
-def create_item(request):
-    if request.method == 'POST':
-        form = ItemForm(request.POST)
-
-        if form.is_valid():
-            form.save()
-            return redirect('food:index')  # Redirect to the desired URL after successful form submission
-    else:
-        form = ItemForm()
-
-    context = {'form': form}
-    return render(request, 'food/item-form.html', context)
-@login_required
-def edit_item(request, item_id):
-    item = get_object_or_404(Item, pk=item_id)
-
-    if request.method == 'POST':
-        form = ItemForm(request.POST, instance=item)
-        if form.is_valid():
-            form.save()
-            return redirect('food:index')  # Redirect to the desired URL after successful form submission
-    else:
-        form = ItemForm(instance=item)
-
-    context = {'form': form, 'item': item}
-    return render(request, 'food/item-form.html', context)
-@login_required
-def delete_item(request, item_id):
-    if request.method == 'POST':
-        item = get_object_or_404(Item, pk=item_id)
-        
-        if item:
-            item.delete()
-            return redirect('food:index')
-        else:
-            return HttpResponse(status=404)
-    else:
-        return render(request, 'food/delete-item.html')
+    def get_object(self, queryset=None):
+        # Retrieve the object to be deleted using 'pk' from the URL
+        item_pk = self.kwargs['pk']
+        return get_object_or_404(Item, pk=item_pk)

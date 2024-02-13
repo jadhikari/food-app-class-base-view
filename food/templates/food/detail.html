@@ -5,9 +5,9 @@
             <img src="{{item.item_image}}" alt="{{item.item_name}}" class="card"height="300px" width="300px;">
         </div>
         <div class="col-6">
-            <h3>{{item.item_name}}</h3>
-            <h3>{{item.item_desc}}</h3>
-            <h3>{{item.item_price}}</h3>
+            <h3>{{object.item_name}}</h3>
+            <h3>{{object.item_desc}}</h3>
+            <h3>{{object.item_price}}</h3>
             <a href="{% url 'food:edit_item' item.id %}" class="btn btn-primary">Edit</a>
             <a href="{% url 'food:delet_item' item.id %}" class="btn btn-danger">Delete</a>
         </div>

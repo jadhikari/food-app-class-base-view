@@ -22,10 +22,10 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('register/',user_views.register, name="register"),
-    path('login/',authentication_views.LoginView.as_view(template_name='accounts/login.html'),name='login'),
-    path('logout/',authentication_views.LogoutView.as_view(template_name='accounts/logout.html'),name='logout'),
-    path('profile/',user_views.profilepage, name="profile"),
+    path('register/', user_views.RegisterView.as_view(), name='register'),
+    path('login/', authentication_views.LoginView.as_view(template_name='accounts/login.html'), name='login'),
+    path('logout/', authentication_views.LogoutView.as_view(template_name='accounts/logout.html'), name='logout'),
+    path('profile/',user_views.ProfileView.as_view(), name="profile"),
     path('admin/', admin.site.urls),
     path('food/',include('food.urls')),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
