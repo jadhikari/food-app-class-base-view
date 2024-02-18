@@ -16,13 +16,14 @@ class FoodDetail(DetailView):
     model= Item
     template_name='food/detail.html'
 
-class ItemCreateView(CreateView):
+class CreateItem(CreateView):
     model = Item
     form_class = ItemForm
     template_name = 'food/item-form.html'
     success_url = reverse_lazy('food:index')  # Replace 'food:index' with the actual URL name
 
     def form_valid(self, form):
+        form.instance.user_name = self.request.user
         response = super().form_valid(form)
         # You can perform additional actions after the form is successfully validated and saved here
         return response
