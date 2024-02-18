@@ -24,7 +24,7 @@ class CreateItem(CreateView):
     model = Item
     form_class = ItemForm
     template_name = 'food/item-form.html'
-    success_url = reverse_lazy('food:index')  # Replace 'food:index' with the actual URL name
+    success_url = reverse_lazy('food:index')  
 
     def form_valid(self, form):
         form.instance.user_name = self.request.user
@@ -37,7 +37,7 @@ class ItemUpdateView(UpdateView):
     model = Item
     form_class = ItemForm
     template_name = 'food/item-form.html'
-    success_url = reverse_lazy('food:index')  # Replace 'food:index' with the actual URL name
+    success_url = reverse_lazy('food:index')  
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -48,7 +48,7 @@ class ItemUpdateView(UpdateView):
 class ItemDeleteView(DeleteView):
     model = Item
     template_name = 'food/delete-item.html'
-    success_url = reverse_lazy('food:index')  # Replace 'food:index' with the actual URL name
+    success_url = reverse_lazy('food:index')  
 
     def get_object(self, queryset=None):
         # Retrieve the object to be deleted using 'pk' from the URL
